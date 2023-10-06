@@ -45,7 +45,7 @@ const QueueManagement = () => {
       console.error('WebSocket not open or not initialized.');
     }
   };
-  
+
   const callNextInQueue = () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send('call'); // Send the string message 'call'
@@ -53,19 +53,43 @@ const QueueManagement = () => {
       console.error('WebSocket not open or not initialized.');
     }
   };
-  
+
 
   return (
     <div>
-      <h1 className='font-bold'>DASHBOARD</h1>
+      <h1 className='font-bold text-center my-2 text-4xl'>DASHBOARD</h1>
+      <div className='flex'>
+        <h1>status : </h1>
+        {calledPerson && <p>Called: {calledPerson}</p>}
+      </div>
+
+      <div className='flex'>
+        <div className='container p-2 m-2 bg-red-300 w-20 h-32 '>
+          <h1>Room 1</h1>
+        </div>
+        <div className='container p-2 m-2 bg-red-300 w-20 h-32 '>
+          <h1>Room 2</h1>
+        </div>
+        <div className='container p-2 m-2 bg-red-300 w-20 h-32 '>
+          <h1>Room 3</h1>
+        </div>
+      </div>
+
+
 
       <h2>Queue</h2>
-      <ul>
-        {queue.map((person, index) => (
-          <li key={index}>{person}</li>
-        ))}
-      </ul>
-      {calledPerson && <p>Called: {calledPerson}</p>}
+      <div className=''>
+        <ul className=''>
+          {queue.map((person, index) => (
+            <div className='container p-2 m-2 bg-gray-300'>
+              <li key={index}>{person}</li>
+            </div>
+
+          ))}
+        </ul>
+      </div>
+
+
     </div>
   );
 };
