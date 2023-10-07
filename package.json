@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.6",
+    "express": "^4.18.2",
     "next": "13.5.4",
     "react": "^18",
     "react-dom": "^18",

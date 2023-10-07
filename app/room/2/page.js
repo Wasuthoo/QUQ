@@ -7,7 +7,7 @@ const QueueManagement = () => {
   const [ws, setWs] = useState(null);
 
   useEffect(() => {
-    const newWs = new WebSocket('ws://localhost:8000');
+    const newWs = new WebSocket('ws://34.230.68.77:8000');
 
     newWs.onopen = () => {
       console.log('WebSocket connection opened');
