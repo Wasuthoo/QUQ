@@ -7,9 +7,8 @@ const QueueManagement = () => {
   const [ws, setWs] = useState(null);
 
   useEffect(() => {
-    // const newWs = new WebSocket('ws://localhost:8000');
-    const newWs = new WebSocket('ws://34.230.68.77:8000');
-
+    const newWs = new WebSocket('ws://localhost:8000');
+    // const newWs = new WebSocket('ws://34.230.68.77:8000');
 
     newWs.onopen = () => {
       console.log('WebSocket connection opened');
@@ -40,9 +39,9 @@ const QueueManagement = () => {
     };
   }, []);
 
-  const addToQueue = () => {
+  const skipQueue = () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send('add'); // Send the string message 'add'
+      ws.send(JSON.stringify({ action: 'skip', room: 1 }));
     } else {
       console.error('WebSocket not open or not initialized.');
     }
@@ -50,13 +49,12 @@ const QueueManagement = () => {
   
   const callNextInQueue = () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send('call'); // Send the string message 'call'
+      ws.send(JSON.stringify({ action: 'join', room: 1 }));
     } else {
       console.error('WebSocket not open or not initialized.');
     }
   };
   
-
   return (
     <div>
       <h1 className='font-bold text-xl'>Queue Management</h1>
@@ -64,11 +62,11 @@ const QueueManagement = () => {
 
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       onClick={addToQueue}>
-         Add to Queue
+         Skip
       </button>
       <button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       onClick={callNextInQueue}>
-         Call Next
+         Join
       </button>
       <button className='btn' onClick={addToQueue}></button>
     </div>

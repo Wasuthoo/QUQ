@@ -9,22 +9,23 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-const queue = [];
-const room = [];
+const queue = ['A01', 'A02', 'A03', 'A04', 'A05', 'A06'];
+const skip = [];
+const room = [{status:'Ready'},{status:'Ready'},{status:'Ready'},{status:'Ready'},{status:'Ready'},{status:'Ready'}];
 
 wss.on('connection', (ws) => {
   console.log('WebSocket client connected');
 
   // Send the current queue to the client when they connect
-  ws.send(JSON.stringify(queue));
+  ws.send(JSON.stringify({ queue: queue, room: room ,skip: skip }));
 
   ws.on('message', (message) => {
-    console.log(`Received: ${message}`);
-    const nmessage = message.toString('utf-8');
-    console.log(nmessage);
+    const parsedMessage = JSON.parse(message);
+    const { action, room } = parsedMessage;
+    console.log(`Received action: ${action}, room: ${room}`);
 
     // Add a new person to the queue
-    if (nmessage === 'add') {
+    if (action === 'add') {
       const newPerson = `Person ${queue.length + 1}`;
       queue.push(newPerson);
 
@@ -37,7 +38,21 @@ wss.on('connection', (ws) => {
     }
 
     // Call the next person in the queue
-    if (nmessage === 'call') {
+    if (action === 'call') {
+      if (queue.length > 0) {
+        const calledPerson = queue.shift();
+
+        // Broadcast the updated queue and the called person to all clients
+        wss.clients.forEach((client) => {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify({ queue, calledPerson }));
+          }
+        });
+      }
+    }
+
+    // Call the next person in the queue
+    if (action === 'skip') {
       if (queue.length > 0) {
         const calledPerson = queue.shift();
 

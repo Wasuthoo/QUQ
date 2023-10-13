@@ -1,0 +1,7 @@
+I want to write next js with tailswind with express websocket 
+my web have 3 view 
+first view is for customer to look how many queue left this view will display 6 rooms status (ready(call queue number) ,Busy (with what queue))  the queue in waiting line and skip queue
+second is for employee in page will disply current calling queue and have 2 button first button is skip button(This will put current calling queue to skip queue and this queue will be called again after all the queue)
+second button is join (this will change this page to display only that queue and finish button)
+
+

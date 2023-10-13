@@ -7,7 +7,9 @@ const QueueManagement = () => {
   const [ws, setWs] = useState(null);
 
   useEffect(() => {
-    const newWs = new WebSocket('ws://34.230.68.77:8000');
+    // const newWs = new WebSocket('ws://34.230.68.77:8000');
+    const newWs = new WebSocket('ws://localhost:8000');
+    
     newWs.onopen = () => {
       console.log('WebSocket connection opened');
     };
@@ -57,7 +59,7 @@ const QueueManagement = () => {
   return (
     <div>
       <h1 className='font-bold text-center my-2 text-4xl'>DASHBOARD</h1>
-      <div className='flex'>
+      <div className='flex'>   
         <h1>status : </h1>
         {calledPerson && <p>Called: {calledPerson}</p>}
       </div>
@@ -74,16 +76,13 @@ const QueueManagement = () => {
         </div>
       </div>
 
-
-
       <h2>Queue</h2>
       <div className=''>
-        <ul className=''>
+      <ul className=''>
           {queue.map((person, index) => (
-            <div className='container p-2 m-2 bg-gray-300'>
-              <li key={index}>{person}</li>
+            <div className='container p-2 m-2 bg-gray-300' key={index}>
+              <li>{person}</li>
             </div>
-
           ))}
         </ul>
       </div>

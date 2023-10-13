@@ -3,12 +3,14 @@ import React, { useEffect, useState } from 'react';
 
 const QueueManagement = () => {
   const [queue, setQueue] = useState([]);
+  const [room, setRoom] = useState([]);
+  const [skip, setSkip] = useState([]);
   const [calledPerson, setCalledPerson] = useState('');
   const [ws, setWs] = useState(null);
 
   useEffect(() => {
-    const newWs = new WebSocket('ws://34.230.68.77:8000');
-
+    // const newWs = new WebSocket('ws://34.230.68.77:8000');
+    const newWs = new WebSocket('ws://localhost:8000');
 
     newWs.onopen = () => {
       console.log('WebSocket connection opened');
@@ -16,16 +18,19 @@ const QueueManagement = () => {
 
     newWs.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log('Received from server:', data);
 
-      if (Array.isArray(data)) {
+      console.log('Received from server:'+ data);
+      if (Array.isArray(data.queue)) {
         // Received a new queue
-        setQueue(data);
+        setQueue(queue);
       } else {
         // Received a called person
-        setQueue(data.queue);
-        setCalledPerson(data.calledPerson);
+        setQueue(queue);
       }
+
+      setQueue(queue);
+      setRoom(room);
+      setSkip(skip);
     };
 
     newWs.onclose = () => {
@@ -41,7 +46,7 @@ const QueueManagement = () => {
 
   const addToQueue = () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send('add'); // Send the string message 'add'
+      ws.send(JSON.stringify({ action: 'add', room: 1 }));
     } else {
       console.error('WebSocket not open or not initialized.');
     }
@@ -49,7 +54,7 @@ const QueueManagement = () => {
   
   const callNextInQueue = () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send('call'); // Send the string message 'call'
+      ws.send(JSON.stringify({ action: 'join', room: 1 }));
     } else {
       console.error('WebSocket not open or not initialized.');
     }
@@ -58,24 +63,23 @@ const QueueManagement = () => {
 
   return (
     <div>
-      <h1 className='bold'>Queue Management</h1>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      <h1 className='font-bold text-center my-2 text-*4xl'>Room 1</h1>
+      <button className="p-2 m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       onClick={addToQueue}>
          Add to Queue
       </button>
-      <button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      <button className="p-2 m-2 bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       onClick={callNextInQueue}>
          Call Next
       </button>
-      <button className='btn' onClick={addToQueue}></button>
-
+     
       <h2>Queue</h2>
       <ul>
         {queue.map((person, index) => (
           <li key={index}>{person}</li>
         ))}
       </ul>
-      {calledPerson && <p>Called: {calledPerson}</p>}
+      {/* {calledPerson && <p>Called: {calledPerson}</p>} */}
     </div>
   );
 };
