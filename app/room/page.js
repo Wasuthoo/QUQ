@@ -6,9 +6,12 @@ const QueueManagement = () => {
   const [queue, setQueue] = useState([]);
   const [skip, setSkip] = useState([]);
   const [room, setRoom] = useState([]);
-  const [calledPerson, setCalledPerson] = useState('');
+  const [RoomNum, setRoomNum] = useState('');
+  const [GetRoomNum, setGetRoomNum] = useState(true);
   const [ws, setWs] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const [isJoin, setjoin] = useState(true);
+
 
   useEffect(() => {
     // const newWs = new WebSocket('ws://34.230.68.77:8000');
@@ -27,7 +30,7 @@ const QueueManagement = () => {
       if (Array.isArray(data.room)) {
         // Received a new queue
         setRoom(data.room);
-      } 
+      }
       if (Array.isArray(data.skip)) {
         // Received a new queue
         setSkip(data.skip);
@@ -35,9 +38,9 @@ const QueueManagement = () => {
       if (Array.isArray(data.queue)) {
         // Received a new queue
         setQueue(data.queue);
-        
+
       } else {
-       log('error') 
+        log('error')
       }
       setLoading(false);
     };
@@ -59,42 +62,110 @@ const QueueManagement = () => {
     return <div className="App">Loading...</div>;
   }
 
-  const addToQueue = () => {
+  const selectRoom = (rn) => {
+    setGetRoomNum(false);
+    setRoomNum(rn);
+  }
+
+  if (GetRoomNum) {
+    return (
+      <div>
+        <h1 className='font-bold text-4xl text-center my-4 '>
+          Select Room
+        </h1>
+        <button className="p-2 m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => { selectRoom(1) }}>
+          Room 1
+        </button>
+        <button className="p-2 m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => { selectRoom(2) }}>
+          Room 2
+        </button>
+        <button className="p-2 m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => { selectRoom(3) }}>
+          Room 3
+        </button>
+      </div>
+
+    );
+  }
+
+
+
+  const skipQueue = () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send('add'); // Send the string message 'add'
+      ws.send(JSON.stringify({ room: RoomNum - 1, action: 'skip' }));
     } else {
       console.error('WebSocket not open or not initialized.');
     }
   };
 
-  const callNextInQueue = () => {
+  const joinQueue = () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send('call'); // Send the string message 'call'
+      setjoin(false);
+      ws.send(JSON.stringify({ room: RoomNum - 1, action: 'join' }));
     } else {
       console.error('WebSocket not open or not initialized.');
     }
   };
+
+  const finishQueue = () => {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      setjoin(true);
+      ws.send(JSON.stringify({ room: RoomNum - 1, action: 'finish' }));
+    } else {
+      console.error('WebSocket not open or not initialized.');
+    }
+  };
+
 
 
   return (
     <div>
-      <h1 className='font-bold text-center my-2 text-*4xl'>Room 1</h1>
-      <button className="p-2 m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      onClick={addToQueue}>
-         Add to Queue
-      </button>
-      <button className="p-2 m-2 bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      onClick={callNextInQueue}>
-         Call Next
-      </button>
+      <h1 className='font-bold text-4xl text-center my-4 '>
+        Room {RoomNum}
+      </h1>
+      <h1 className='font-bold text-2xl text-center my-2 text-*4xl'>
+        {room[RoomNum - 1].status} {room[RoomNum - 1].queue}
+      </h1>
+      {
+        (isJoin) ? (
+          <div className='text-center'>
+          <button className="p-2 m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={skipQueue}>
+            Skip
+          </button>
+          <button className="p-2 m-2 bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={joinQueue}>
+            Join
+          </button>
+        </div>
+        ) : (
+          <div className='text-center'>
+          <button className="p-2 m-2 bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={finishQueue}>
+            Finish
+          </button>
+        </div>
+        )
+
+      }
      
+
+
       <h2>Queue</h2>
       <ul>
         {queue.map((person, index) => (
           <li key={index}>{person}</li>
         ))}
       </ul>
-      {/* {calledPerson && <p>Called: {calledPerson}</p>} */}
+
+      <h2>Skip queue</h2>
+      <ul>
+        {skip.map((person, index) => (
+          <li key={index}>{person}</li>
+        ))}
+      </ul>
     </div>
   );
 };

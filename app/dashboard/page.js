@@ -1,13 +1,13 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image'
- 
+import Door from '@/components/Door';
+
 
 const QueueManagement = () => {
   const [queue, setQueue] = useState([]);
   const [skip, setSkip] = useState([]);
   const [room, setRoom] = useState([]);
-  const [calledPerson, setCalledPerson] = useState('');
   const [ws, setWs] = useState(null);
   const [isLoading, setLoading] = useState(true);
 
@@ -26,19 +26,16 @@ const QueueManagement = () => {
 
 
       if (Array.isArray(data.room)) {
-        // Received a new queue
         setRoom(data.room);
-      } 
+      }
       if (Array.isArray(data.skip)) {
-        // Received a new queue
         setSkip(data.skip);
       }
       if (Array.isArray(data.queue)) {
-        // Received a new queue
         setQueue(data.queue);
-        
+
       } else {
-       log('error') 
+        log('Received UNKNOWN message from server: ', data);
       }
       setLoading(false);
     };
@@ -60,60 +57,44 @@ const QueueManagement = () => {
     return <div className="App">Loading...</div>;
   }
 
-  const addToQueue = () => {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send('add'); // Send the string message 'add'
-    } else {
-      console.error('WebSocket not open or not initialized.');
-    }
-  };
-
-  const callNextInQueue = () => {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send('call'); // Send the string message 'call'
-    } else {
-      console.error('WebSocket not open or not initialized.');
-    }
-  };
-
-
   return (
     <div className='bg-yellow-400 h-screen'>
-      <div className="relative object-cover">
+      <div className="">
         <img src="bg-classroom.svg" />
-        <div className=''>
-          <Image className='absolute top-9 left-[75px]'
-            src="/door.png"
-            width={150}
-            height={150}
-            alt='door1'
-          />
-          <h1 className='absolute font-bold top-[190px] left-[120px]'>Room 1</h1>
-          <h1 className='absolute font-bold top-[55px] left-[130px]'>{room[0].status}</h1>
-        </div>
-        <div>
-          <Image className='absolute top-9 left-[360px]'
-            src="/door.png"
-            width={150}
-            height={150}
-            alt='door2'
-          />
-          <h1 className='absolute font-bold top-[190px] left-[405px]'>Room 2</h1>
-          <h1 className='absolute font-bold top-[55px] left-[405px]'>{room[1].status}</h1>
-        </div>
 
-        <div>
-          <Image className='absolute top-9 left-[650px]'
-            src="/door.png"
-            width={150}
-            height={150}
-            alt='door2'
+        <div className=' absolute flex top-[100px]  bg-transparent '>
+          <Door showImage={room[0].status}
+            room={'Room1'}
+            status={room[0].status}
+            queue={room[0].queue}
           />
-          <h1 className='absolute font-bold top-[190px] left-[695px]'>Room 3</h1>
-          <h1 className='absolute font-bold top-[55px] left-[695px]'>{room[2].status}</h1>
+
+          <Door showImage={room[1].status}
+            room={'Room2'}
+            status={room[1].status}
+            queue={room[1].queue}
+          />
+
+          <Door showImage={room[2].status}
+            room={'Room3'}
+            status={room[2].status}
+            queue={room[2].queue}
+          />
         </div>
       </div>
-     
+
+      <div className='text-2xl font-bold absolute top-[720px] left-[130px]'>
+        <h1>Skip Queue</h1>
+        <div className='p-2 flex'>
+            {skip.map((person, index) => (
+              <a className='p-2' key={index}>{person}</a>
+            ))}
+          
+        </div>
+
+      </div>
+
+
       <div className='flex'>
         <h1>queue : </h1>
         <ul>
@@ -121,7 +102,7 @@ const QueueManagement = () => {
             <li key={index}>{person}</li>
           ))}
         </ul>
-        </div>
+      </div>
 
     </div>
   );

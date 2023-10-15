@@ -4,72 +4,81 @@ const WebSocket = require('ws');
 const http = require('http');
 const express = require('express');
 const path = require('path');
-
+const e = require('express');
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-const queue = ['A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07', 'A08', 'A09'];
-const skip = [];
-const room = [{status:'Ready',queue:''},{status:'Ready',queue:''},{status:'Ready',queue:''}];
+const Squeue = ['A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07', 'A08', 'A09', 'B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B09', 'C01', 'C02', 'C03', 'C04', 'C05', 'C06', 'C07', 'C08', 'C09'];
+const Sskip = [''];
+const Sroom = [{ status: 'Ready', queue: '' }, { status: 'Ready', queue: '' }, { status: 'Ready', queue: '' }];
 
 wss.on('connection', (ws) => {
   console.log('WebSocket client connected');
 
   // Send the current queue to the client when they connect
-  ws.send(JSON.stringify({ queue: queue, room: room ,skip: skip }));
-  for (var i = 0; i < room.length; i++) {
-    if (room[i].status === 'Ready') {
-      room[i].status = queue[0];
-      queue.shift();
+  ws.send(JSON.stringify({ queue: Squeue, room: Sroom, skip: Sskip }));
+  for (var i = 0; i < Sroom.length; i++) {
+    if (Sroom[i].status === 'Ready') {
+      Sroom[i].queue = Squeue[0];
+      Sroom[i].status = 'calling';
+      Squeue.shift();
     }
   }
 
 
   ws.on('message', (message) => {
-    const parsedMessage = JSON.parse(message);
-    const { action, room } = parsedMessage;
+    const { room, action } = JSON.parse(message);
     console.log(`Received action: ${action}, room: ${room}`);
+    console.log(room);
+    console.log(action);
 
-    // Add a new person to the queue
-    if (action === 'add') {
-      const newPerson = `Person ${queue.length + 1}`;
-      queue.push(newPerson);
-
-      // Broadcast the updated queue to all connected clients
+    if (action === 'join') {
+      Sroom[room].status = 'joined';
       wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(queue));
+          client.send(JSON.stringify({ queue: Squeue, room: Sroom }));
         }
       });
     }
 
-    // Call the next person in the queue
-    if (action === 'call') {
-      if (queue.length > 0) {
-        const calledPerson = queue.shift();
-
-        // Broadcast the updated queue and the called person to all clients
-        wss.clients.forEach((client) => {
-          if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify({ queue, calledPerson }));
-          }
-        });
+    if (action === 'skip') {
+      Sroom[room].status = 'calling';
+      
+      if (Squeue.length > 0) {
+        Sskip.push(Sroom[room].queue);
+        Sroom[room].queue = Squeue[0];
+        Squeue.shift();
       }
+      else {
+        Sskip.push(Sroom[room].queue);
+        Sroom[room].queue = Sskip[0];
+        Sskip.shift();
+      }
+
+      
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify({ queue: Squeue, room: Sroom, skip: Sskip }));
+        }
+      });
     }
 
-    // Call the next person in the queue
-    if (action === 'skip') {
-      if (queue.length > 0) {
-        const calledPerson = queue.shift();
-
-        // Broadcast the updated queue and the called person to all clients
-        wss.clients.forEach((client) => {
-          if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify({ queue, calledPerson }));
-          }
-        });
+    if (action === 'finish') {
+      Sroom[room].status = 'calling';
+      if (Squeue.length > 0) {
+        Sroom[room].queue = Squeue[0];
+        Squeue.shift();
       }
+      else {
+        Sroom[room].queue = Sskip[0];
+        Sskip.shift();
+      }
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify({ queue: Squeue, room: Sroom, skip: Sskip }));
+        }
+      });
     }
   });
 
