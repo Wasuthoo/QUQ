@@ -9,15 +9,22 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-const queue = ['A01', 'A02', 'A03', 'A04', 'A05', 'A06'];
+const queue = ['A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07', 'A08', 'A09'];
 const skip = [];
-const room = [{status:'Ready'},{status:'Ready'},{status:'Ready'},{status:'Ready'},{status:'Ready'},{status:'Ready'}];
+const room = [{status:'Ready',queue:''},{status:'Ready',queue:''},{status:'Ready',queue:''}];
 
 wss.on('connection', (ws) => {
   console.log('WebSocket client connected');
 
   // Send the current queue to the client when they connect
   ws.send(JSON.stringify({ queue: queue, room: room ,skip: skip }));
+  for (var i = 0; i < room.length; i++) {
+    if (room[i].status === 'Ready') {
+      room[i].status = queue[0];
+      queue.shift();
+    }
+  }
+
 
   ws.on('message', (message) => {
     const parsedMessage = JSON.parse(message);

@@ -1,12 +1,14 @@
 "use client"
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image'
 
 const QueueManagement = () => {
   const [queue, setQueue] = useState([]);
-  const [room, setRoom] = useState([]);
   const [skip, setSkip] = useState([]);
+  const [room, setRoom] = useState([]);
   const [calledPerson, setCalledPerson] = useState('');
   const [ws, setWs] = useState(null);
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     // const newWs = new WebSocket('ws://34.230.68.77:8000');
@@ -18,20 +20,29 @@ const QueueManagement = () => {
 
     newWs.onmessage = (event) => {
       const data = JSON.parse(event.data);
+      console.log('Received from server:', data);
+      console.log('Received from server:', data.room);
 
-      console.log('Received from server:'+ data);
+
+      if (Array.isArray(data.room)) {
+        // Received a new queue
+        setRoom(data.room);
+      } 
+      if (Array.isArray(data.skip)) {
+        // Received a new queue
+        setSkip(data.skip);
+      }
       if (Array.isArray(data.queue)) {
         // Received a new queue
-        setQueue(queue);
+        setQueue(data.queue);
+        
       } else {
-        // Received a called person
-        setQueue(queue);
+       log('error') 
       }
-
-      setQueue(queue);
-      setRoom(room);
-      setSkip(skip);
+      setLoading(false);
     };
+
+
 
     newWs.onclose = () => {
       console.log('WebSocket connection closed');
@@ -44,22 +55,26 @@ const QueueManagement = () => {
     };
   }, []);
 
+  if (isLoading) {
+    return <div className="App">Loading...</div>;
+  }
+
   const addToQueue = () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send(JSON.stringify({ action: 'add', room: 1 }));
+      ws.send('add'); // Send the string message 'add'
     } else {
       console.error('WebSocket not open or not initialized.');
     }
   };
-  
+
   const callNextInQueue = () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send(JSON.stringify({ action: 'join', room: 1 }));
+      ws.send('call'); // Send the string message 'call'
     } else {
       console.error('WebSocket not open or not initialized.');
     }
   };
-  
+
 
   return (
     <div>
