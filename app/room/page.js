@@ -132,28 +132,25 @@ const QueueManagement = () => {
       {
         (isJoin) ? (
           <div className='text-center'>
-          <button className="p-2 m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={skipQueue}>
-            Skip
-          </button>
-          <button className="p-2 m-2 bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={joinQueue}>
-            Join
-          </button>
-        </div>
+            <button className="p-2 m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={skipQueue}>
+              Skip
+            </button>
+            <button className="p-2 m-2 bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={joinQueue}>
+              Join
+            </button>
+          </div>
         ) : (
           <div className='text-center'>
-          <button className="p-2 m-2 bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={finishQueue}>
-            Finish
-          </button>
-        </div>
+            <button className="p-2 m-2 bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={finishQueue}>
+              Finish
+            </button>
+          </div>
         )
 
       }
-     
-
-
       <h2>Queue</h2>
       <ul>
         {queue.map((person, index) => (

@@ -47,6 +47,8 @@ const QueueManagement = () => {
       console.log('WebSocket connection closed');
     };
 
+    
+
     setWs(newWs);
 
     return () => {
@@ -56,6 +58,14 @@ const QueueManagement = () => {
 
   if (isLoading) {
     return <div className="App">Loading...</div>;
+  }
+
+  const resetQueue = () => {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ room: 0, action: 'reset' }));
+    } else {
+      console.error('WebSocket not open or not initialized.');
+    }
   }
 
   return (
@@ -90,11 +100,14 @@ const QueueManagement = () => {
             {skip.map((person, index) => (
               <a className='p-2' key={index}>{person}</a>
             ))}
-          
         </div>
-
       </div>
 
+      <button className="p-2 m-2 bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={resetQueue}>
+              reset queue
+      </button>
+    
 
       <div className='flex'>
         <h1>queue : </h1>
