@@ -27,7 +27,6 @@ const QueueManagement = () => {
       console.log('Received from server:', data);
       console.log('Received from server:', data.room);
 
-
       if (Array.isArray(data.room)) {
         // Received a new queue
         setRoom(data.room);
@@ -45,8 +44,6 @@ const QueueManagement = () => {
       }
       setLoading(false);
     };
-
-
 
     newWs.onclose = () => {
       console.log('WebSocket connection closed');
@@ -96,6 +93,7 @@ const QueueManagement = () => {
   const skipQueue = () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ room: RoomNum - 1, action: 'skip' }));
+      
     } else {
       console.error('WebSocket not open or not initialized.');
     }

@@ -13,8 +13,8 @@ const Door = ({ showImage, room, status,queue }) => {
             height={340}
             alt='door1'
           />
-          <h1 className='font-bold absolute top-[200px] left-[145px]'>{room}</h1>
-          <h1 className='font-bold absolute top-[55px] left-[130px]'>{status} {queue}</h1>
+          <h1 className='font-bold  absolute top-[200px] left-[145px]'>{room}</h1>
+          <h1 className='font-bold text-white absolute top-[55px] left-[130px]'>{status} {queue}</h1>
 
         </div>
 
@@ -27,8 +27,8 @@ const Door = ({ showImage, room, status,queue }) => {
           height={340}
           alt='door1'
         />
-        <h1 className='font-bold absolute top-[200px] left-[145px]'>{room}</h1>
-        <h1 className='font-bold absolute top-[55px] left-[130px]'>{status} {queue}</h1>
+        <h1 className='font-bold  absolute top-[200px] left-[145px]'>{room}</h1>
+        <h1 className='font-bold  absolute top-[55px] left-[130px]'>{status} {queue}</h1>
 
       </div>
 

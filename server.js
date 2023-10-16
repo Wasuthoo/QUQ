@@ -10,8 +10,10 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 var Squeue = ['A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07', 'A08', 'A09', 'B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B09', 'C01', 'C02', 'C03', 'C04', 'C05', 'C06', 'C07', 'C08', 'C09'];
-var Sskip = [''];
+var Sskip = [];
 var Sroom = [{ status: 'Ready', queue: '' }, { status: 'Ready', queue: '' }, { status: 'Ready', queue: '' }];
+var fcount = 0;
+
 
 wss.on('connection', (ws) => {
   console.log('WebSocket client connected');
@@ -35,6 +37,7 @@ wss.on('connection', (ws) => {
 
     if (action === 'join') {
       Sroom[room].status = 'joined';
+      fcount++
       wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify({ queue: Squeue, room: Sroom }));
@@ -43,8 +46,9 @@ wss.on('connection', (ws) => {
     }
     if (action === 'reset') {
       Squeue = ['A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07', 'A08', 'A09', 'B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B09', 'C01', 'C02', 'C03', 'C04', 'C05', 'C06', 'C07', 'C08', 'C09'];
-      Sskip = [''];
+      Sskip = [];
       Sroom = [{ status: 'Ready', queue: '' }, { status: 'Ready', queue: '' }, { status: 'Ready', queue: '' }];
+      fcount = 0;
       for (var i = 0; i < Sroom.length; i++) {
         if (Sroom[i].status === 'Ready') {
           Sroom[i].queue = Squeue[0];
