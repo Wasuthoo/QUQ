@@ -15,15 +15,14 @@ const Sroom = [{ status: 'Ready', queue: '' }, { status: 'Ready', queue: '' }, {
 
 wss.on('connection', (ws) => {
   console.log('WebSocket client connected');
-
-  // Send the current queue to the client when they connect
-  ws.send(JSON.stringify({ queue: Squeue, room: Sroom, skip: Sskip }));
   for (var i = 0; i < Sroom.length; i++) {
     if (Sroom[i].status === 'Ready') {
       Sroom[i].queue = Squeue[0];
       Sroom[i].status = 'calling';
       Squeue.shift();
     }
+    // Send the current queue to the client when they connect
+  ws.send(JSON.stringify({ queue: Squeue, room: Sroom, skip: Sskip }));
   }
 
 
