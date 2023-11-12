@@ -1,38 +1,63 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+**QUQ - Simple Queue Management for Student Interviews**
 
-## Getting Started
+Welcome to QUQ, your easy-to-use solution for streamlined queue management in student interviews. This project, crafted with Next.js, Tailwind CSS, Express, and WebSocket.io, ensures a seamless and responsive queue management experience.
 
-First, run the development server:
+### Key Features:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Instant Updates:**
+   - Experience real-time queue management with WebSocket.io, providing instant notifications as students join or leave.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Teacher Control:**
+   - Empower teachers to call students for interviews, allowing the flexibility to skip the queue and prioritize certain candidates.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+3. **Skipline for Priority:**
+   - Teachers can use the skipline feature to temporarily skip a student in the queue, ensuring fairness and efficiency.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+4. **Student Dashboard:**
+   - Students can effortlessly track their queue position through a user-friendly dashboard.
 
-## Learn More
+### Technologies Used:
 
-To learn more about Next.js, take a look at the following resources:
+- **Next.js:** React framework for server-side rendering.
+- **Tailwind CSS:** Utility-first CSS framework for rapid UI development.
+- **Express:** Fast and minimalist web framework for Node.js.
+- **WebSocket.io:** Real-time communication library for seamless updates.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Getting Started:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/quq.git
+   ```
 
-## Deploy on Vercel
+2. **Install dependencies:**
+   ```bash
+   cd quq
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+   
+4. **Start the websocket server:**
+   ```bash
+   node server.js
+   ```
+Visit [http://localhost:3000](http://localhost:3000) to explore QUQ and simplify your student interview process!
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-# hongyen_client
-# hongyen_client
+### Contribute:
+
+Contributions are welcome! Report bugs, request features, or submit code via issues and pull requests. Let's enhance the interview experience with QUQ!
+
+## Team Members
+![2](https://github.com/Wasuthoo/QUQ/assets/67475566/2a8acf45-40dc-403c-a254-07ba2199ce45)
+
+
+## Demo
+
+
+https://github.com/Wasuthoo/QUQ/assets/67475566/0938728f-bd0c-4233-b3ba-1e686e1fe2fb
+
+
