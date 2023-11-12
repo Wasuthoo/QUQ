@@ -1,3 +1,7 @@
+
+![1](https://github.com/Wasuthoo/QUQ/assets/67475566/7771f794-5d76-461a-aa81-3c7e507ae579)
+
+
 **QUQ - Simple Queue Management for Student Interviews**
 
 Welcome to QUQ, your easy-to-use solution for streamlined queue management in student interviews. This project, crafted with Next.js, Tailwind CSS, Express, and WebSocket.io, ensures a seamless and responsive queue management experience.
